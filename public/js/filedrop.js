@@ -93,8 +93,8 @@ function processFile(e) {
 function post2tornado() {
 
   //Define Error Handling
-  var wrong_type_msg = 'Aw shucks! MSMExplorer-d3 requires a Matrix Market file as input.',
-    we_did_bad = 'Aw shucks! MSMExplorer-d3 did something wrong. We apologize.',
+  var wrong_type_msg = 'Aw shucks! MutInf-View requires a Matrix Market file as input.',
+    we_did_bad = 'Aw shucks! MutInf-View did something wrong. We apologize.',
     response,
     request;
 
