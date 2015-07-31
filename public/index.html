@@ -1,0 +1,124 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no" />
+  <title>Mutual Information Viewer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.css" />
+  <link rel="stylesheet" type="text/css" href="./css/app.css">
+  <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+  <script src="./js/SaveSVGasPNG.js"></script>
+</head>
+
+<body ng-app="app" ng-cloak ng-controller="mainCntrl">
+
+  <!-- Navbar At Top of Page -->
+  <div class="navbar navbar-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- Title -->
+        <a class="brand" href="#">Mutual Information Viewer</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <!-- <li><a href='#'>Home</a></li> -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Get Help</a>
+              <ul class="dropdown-menu">
+                <li><a href="https://en.wikipedia.org/wiki/Mutual_information" target="_blank">What is Mutual Information? »</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Chord_diagram" target="_blank">What am I looking at? »</a></li>
+              </ul>
+              <li>
+                <!-- Activate Modified Crowbar.js -->
+                <a href="#" onclick="saveSvgAsPng(document.getElementsByTagName('svg')[0], 'mutinf-view.png', {scale: 3})">Save Chart</a>
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="large-7 small-6 columns" role="content">
+      <article>
+        <chord-diagram></chord-diagram>
+      </article>
+    </div>
+
+    <aside class="large-3 small-2 columns">
+      <ul>
+        <li style="margin-top:50%;">
+          <div id="dropzone">
+            <label id="drop">
+              <a class="sidebar-label">upload</a>
+              <input type="file" id="upload" onchange="handleInput()" multiple="">
+            </label>
+            <output id="list"></output>
+          </div>
+        </li>
+        <br>
+        <br>
+        <br>
+        <li>
+          <button class="button tiny right" ng-click="filters = {}; hasFilters = false;">
+            clear
+          </button>
+          <div class="panel">
+            <div ng-if="hasFilters === false" style="margin: 15px; margin-top:30px; opacity: 0.5; text-align: center;">
+              Click to remove a residue
+            </div>
+            <ul class="side-nav">
+              <li ng-repeat="filter in filters">
+                <div>
+                  <input ng-model="filter.hide" id="{{ filter.name }}" type="checkbox">
+                  <label for="{{ filter.name }}">{{ filter.name }}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <fieldset id="tooltip" class="row secondary">
+      <div class="large-12 small-12 columns">
+        <h6>{{ tooltip.sname }} -> {{ tooltip.tname }} : {{ pFormat(tooltip.svalue) }}</h6>
+      </div>
+      <div class="large-12 small-12 columns">
+        <h6>{{ tooltip.tname }} -> {{ tooltip.sname }} : {{ pFormat(tooltip.tvalue) }}</h6>
+      </div>
+    </fieldset>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="wrap footer">
+    <div class="span2"></div>
+    <div class="span8">
+      <!-- Credits -->
+      <p class="muted credit">
+        Courtesy of <a target="blank" href="http://www.cxhernandez.com">Carlos Xavier Hernández</a>, code on <a target="blank" href="https://github.com/cxhernandez/mutinf-view/">github</a>. Have feedback? Check out the <a target="blank" href="https://github.com/cxhernandez/mutinf-view/issues">issue tracker</a>.
+      </p>
+    </div>
+  </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/js/foundation.min.js"></script>
+  <script src="./js/mainController.js"></script>
+  <script src="./js/matrixFactory.js"></script>
+  <script src="./js/chordDirective.js"></script>
+  <script src="./js/filedrop.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+</body>
+
+</html>

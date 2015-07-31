@@ -1,0 +1,213 @@
+* {
+  margin: 0;
+}
+html, body {
+  height: 100%;
+}
+
+#tooltip {
+  background-color: white;
+  pointer-events: none;
+  font-size: 12px;
+  z-index: 1000;
+  color: grey;
+  position: fixed;
+  width: 500px;
+  border-radius: 6px;
+  opacity: 0;
+  bottom: 10%;
+  right: 5%;
+  box-shadow: 5px 5px 2.5px #666;
+}
+path.chord {
+  -webkit-backface-visibility: hidden;
+  fill-opacity: .67;
+  stroke: none;
+}
+text, .group path {
+  cursor: pointer;
+}
+input[type="radio"] {
+  margin: 0px;
+}
+.years {
+  height: 600px;
+  overflow: scroll;
+}
+aside {
+  margin: 0px;
+}
+ul {
+  list-style-type: none;
+}
+
+/*----------------------------
+    The file upload form
+-----------------------------*/
+
+#upload {
+  font-family: 'PT Sans Narrow', sans-serif;
+  background-color: none;
+  width: auto;
+  margin: 5px;
+}
+#list {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+#drop {
+  background-color: none;
+  width: auto;
+  max-width: 150px;
+  padding: 40px 88px;
+  margin: 10px auto 10px;
+  border: 10px dashed #ccc;
+  border-radius: 3px;
+  text-align: center;
+  text-transform: uppercase;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: bold;
+  color: #7f858a;
+}
+#drop a {
+  -webkit-appearance: none;
+  -webkit-transition-delay: 0s;
+  -webkit-transition-duration: 0.3s;
+  -webkit-transition-property: background-color;
+  -webkit-transition-timing-function: ease-out;
+  background-color: rgb(0, 140, 186);
+  border-bottom-color: rgb(0, 112, 149);
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-bottom-style: solid;
+  border-bottom-width: 0px;
+  border-left-color: rgb(0, 112, 149);
+  border-left-style: solid;
+  border-left-width: 0px;
+  border-right-color: rgb(0, 112, 149);
+  border-right-style: solid;
+  border-right-width: 0px;
+  border-top-color: rgb(0, 112, 149);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-top-style: solid;
+  border-top-width: 0px;
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  display: block;
+  float: right;
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  list-style-position: outside;
+  list-style-type: none;
+  margin-right: -40px;
+  padding-bottom: 11px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  transition-delay: 0s;
+  transition-duration: 0.3s;
+  transition-property: background-color;
+  transition-timing-function: ease-out;
+}
+#drop a:hover {
+  color: lightgray;
+}
+#drop input {
+  width: auto;
+  display: none;
+}
+#upload ul {
+  list-style: none;
+  margin: 0 -30px;
+}
+#upload ul li {
+  background-color: none;
+  padding: 15px;
+  height: 52px;
+  position: relative;
+}
+#upload ul li input {
+  display: none;
+}
+#upload ul li p {
+  width: 144px;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #7f858a;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  top: 20px;
+  left: 100px;
+}
+#upload ul li i {
+  font-weight: normal;
+  font-style: normal;
+  color: #7f7f7f;
+  display: block;
+}
+#upload ul li canvas {
+  top: 15px;
+  left: 32px;
+  position: absolute;
+}
+#upload ul li span {
+  width: 15px;
+  height: 12px;
+  position: absolute;
+  top: 34px;
+  right: 33px;
+  cursor: pointer;
+}
+#upload ul li.working span {
+  height: 16px;
+  background-position: 0 -12px;
+}
+#upload ul li.error p {
+  color: red;
+}
+#drop-outer {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+a.sidebar-label {
+  text-transform: lowercase;
+}
+
+/*----------------------------
+    Footer
+-----------------------------*/
+
+.clear-for-footer {
+  min-height: 10px;
+}
+
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  overflow: auto;
+  margin: 0 auto -60px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.footer, .push {
+  position: relative;
+  clear: both;
+  width: 100%;
+  height: 60px; /* .push must be the same height as .footer */
+  background-color: #f5f5f5;
+}
+
+.footer .credit {
+  padding-top: 20px;
+}
