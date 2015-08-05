@@ -10,7 +10,9 @@ app.directive('chordDiagram', ['$window', 'matrixFactory',
       dims[0] = size[0] - marg[1] - marg[3]; // WIDTH
       dims[1] = size[1] - marg[0] - marg[2]; // HEIGHT
 
-      var colors = d3.scale.ordinal().range(["#AAA", "purple", "steelblue", "green", "orange", "brown"]);
+      var colors = d3.scale.ordinal().range(["peru", "BlueViolet", "DodgerBlue",
+        "mediumspringgreen", "tomato", "firebrick"
+      ]);
       var chord = d3.layout.chord()
         .padding(0.01)
         .sortGroups(d3.descending)
@@ -68,7 +70,7 @@ app.directive('chordDiagram', ['$window', 'matrixFactory',
         .attr("transform", "translate(10, 10)")
         .text("Updating...");
 
-      $scope.drawChords = function(data) {
+      $scope.drawChords = function(data, pagerank) {
 
         messages.attr("opacity", 1);
         messages.transition().duration(1000).attr("opacity", 0);
@@ -99,6 +101,7 @@ app.directive('chordDiagram', ['$window', 'matrixFactory',
           .on("click", groupClick)
           .on("mouseover", dimChords)
           .on("mouseout", resetChords)
+          .attr("fill", "ghostwhite")
           .text(function(d) {
             return d._id;
           });
@@ -113,12 +116,13 @@ app.directive('chordDiagram', ['$window', 'matrixFactory',
           .attr("transform", function(d) {
             d.angle = (d.startAngle + d.endAngle) / 2;
             var r = "rotate(" + (d.angle * 180 / Math.PI - 90) + ")";
-            var t = " translate(" + (innerRadius + 26) + ")";
+            var t = " translate(" + (innerRadius + 3) + ")";
             return r + t + (d.angle > Math.PI ? " rotate(180)" : " rotate(0)");
           })
           .attr("text-anchor", function(d) {
             return d.angle > Math.PI ? "end" : "begin";
-          });
+          })
+          .attr("fill", "ghostwhite");
 
         groups.exit().select("text").attr("fill", "orange");
         groups.exit().select("path").remove();
@@ -143,7 +147,71 @@ app.directive('chordDiagram', ['$window', 'matrixFactory',
         chords.transition().duration(2000)
           .attrTween("d", matrix.chordTween(path));
 
-        chords.exit().remove()
+        chords.exit().remove();
+
+        var keys = pagerank.map(function(d, i) {
+          return d.name;
+        });
+        var numBars = keys.length;
+
+        var angles = [];
+        groups[0].forEach(function(d, i) {
+          angles.push(d.__data__.angle);
+        });
+
+        var extent = d3.extent(pagerank, function(d) {
+          return d.value;
+        });
+        var barScale = d3.scale.linear()
+          .domain(extent)
+          .range([0, 100]);
+
+        var innerR = innerRadius + 20;
+        var outerR = innerR + 80;
+
+        var arr = pagerank.map(function(d) { return d.value})
+        var min = Math.log(Math.min.apply(null, arr));
+        var max = Math.log(Math.max.apply(null, arr));
+
+        function radius(mic) {
+          return (outerR-innerR)*(Math.log(mic)-min)/(max-min) + innerR;
+        };
+
+        var barc = d3.svg.arc()
+          .startAngle(function(d, i) {
+            return angles[i] - (.6 / numBars);
+          })
+          .endAngle(function(d, i) {
+            return angles[i] + (.6 / numBars);
+          })
+          .outerRadius(function(d) {
+            return Math.max(radius(d.value), innerR) + 10;
+          })
+          .innerRadius(function(d) {
+            return innerR
+          });
+
+        var bars = gEnter.data(pagerank)
+          .append("path")
+          .each(function(d) {
+            d.outerRadius = 0;
+          })
+          .style("fill", function(d) {
+            return 'LightSlateGray';
+          })
+          .attr("d", barc);
+
+        bars.transition().ease("elastic").duration(1000)
+          .delay(function(d, i) {
+            return (33 - i) * 100;
+          })
+          .attrTween("d", function(d, index) {
+            var i = d3.interpolate(d.outerRadius, barScale(+d.value));
+            return function(t) {
+              d.outerRadius = i(t);
+              return barc(d, index);
+            };
+          });
 
         function groupClick(d) {
           d3.event.preventDefault();

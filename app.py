@@ -37,10 +37,12 @@ import time
 import json
 import tornado
 import optparse
+import numpy as np
 import tornado.ioloop
 import scipy.io as sio
 from scipy import sparse
 from StringIO import StringIO
+from scipy.sparse import linalg
 from pymongo import Connection, MongoClient
 from itertools import combinations
 from tornado.httpclient import AsyncHTTPClient
@@ -73,16 +75,30 @@ def connect_to_mongo():
     return db
 
 
-# MAKES MSM GRAPH AND RETURNS JSON
+def pagerank(A):
+    w, v = linalg.eigs(A)
+    return abs(np.real(v[:, 0]) /
+               np.linalg.norm(v[:, 0], 1))
+
+
+# CREATES ADJACENCY AND RETURNS JSON
 def make_json(w):
-    data = []
+    data = {
+        'adjacency': [],
+        'pagerank': []
+        }
+
     for i, j in combinations(range(w.shape[0]), 2):
-        data.append({
-                    'source': i,
-                    'target': j,
-                    'flow1': w[i, j],
-                    'flow2': w[j, i]
-                    })
+        data['adjacency'].append({
+                                 'source': i,
+                                 'target': j,
+                                 'flow1': w[i, j],
+                                 'flow2': w[j, i]
+                                 })
+
+    for i in pagerank(w):
+        data['pagerank'].append({'value': i})
+
     return json.dumps(data)
 
 

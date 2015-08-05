@@ -1,5 +1,8 @@
 app = angular.module('app', []);
-input = './data/example.csv'
+input = {
+  'adjacency': './data/adjacency.csv',
+  'pagerank': './data/pagerank.csv'
+}
 
 isString = function(obj) {
   return toString.call(obj) == '[object String]';
@@ -8,7 +11,31 @@ isString = function(obj) {
 function chart($scope) {
 
   if (!$scope.master) {
-    $scope.master = [];
+    $scope.master = {
+      'adjacency': [],
+      'pagerank': []
+    };
+  }
+
+  function updateAdj(x) {
+    x.forEach(function(d) {
+      if (d.source != d.target) {
+        d.flow1 = +d.flow1;
+        d.flow2 = +d.flow2;
+
+        $scope.master['adjacency'].push(d);
+      }
+
+    });
+  }
+
+  function updatePG(x) {
+
+    x.forEach(
+      function(d) {
+        d.value = +d.value;
+        $scope.master['pagerank'].push(d);
+      });
   }
 
   $scope.filters = {};
@@ -35,49 +62,46 @@ function chart($scope) {
   };
 
   $scope.update = function() {
-    var data = $scope.master;
-    if (data && $scope.hasFilters) {
-      $scope.drawChords(data.filter(function(d) {
+
+    var adjacency = $scope.master['adjacency'];
+    var pagerank = $scope.master['pagerank'];
+
+    if (adjacency && pagerank && $scope.hasFilters) {
+      $scope.drawChords(adjacency.filter(function(d) {
         var fl = $scope.filters;
         var v1 = d.source,
           v2 = d.target;
-
 
         if ((fl[v1] && fl[v1].hide) || (fl[v2] && fl[v2].hide)) {
           return false;
         }
         return true;
+      }), pagerank.filter(function (d, i) {
+        return !($scope.filters[i] && $scope.filters[i].hide);
       }));
-    } else if (data) {
-      $scope.drawChords(data);
+
+    } else if (adjacency && pagerank) {
+      $scope.drawChords(adjacency, pagerank);
     }
   };
 
 
-  if (isString(input)) {
+  if (isString(input['adjacency'])) {
     // IMPORT THE CSV DATA
-    d3.csv(input, function(err, data) {
+    d3.csv(input['adjacency'], function(err, data) {
+      updateAdj(data);
 
-      data.forEach(function(d) {
-        d.flow1 = +d.flow1;
-        d.flow2 = +d.flow2;
-
-        $scope.master.push(d);
-
+      d3.csv(input['pagerank'], function(err, data) {
+        updatePG(data);
+        $scope.update();
       });
-      $scope.update();
     });
+
   } else {
-    
-    input.forEach(function(d) {
-      d.flow1 = +d.flow1;
-      d.flow2 = +d.flow2;
 
-      $scope.master.push(d);
-
-    });
+    updateAdj(input['adjacency']);
+    updatePG(input['pagerank']);
     $scope.update();
-
   }
 
   $scope.$watch('filters', $scope.update, true);
